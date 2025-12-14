@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package chat.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "grpc-demo/gen/chat/v1";
+
+service ChatService {
+    // Server Streaming: подписка на сообщения комнаты
+    rpc SubscribeToRoom(SubscribeRequest) returns (stream ChatMessage);
+    
+    // Client Streaming: отправка нескольких сообщений
+    rpc SendMessages(stream ChatMessage) returns (SendMessagesResponse);
+    
+    // Bidirectional Streaming: чат
+    rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+message SubscribeRequest {
+    string room_id = 1;
+}
+
+message SendMessagesResponse {
+    int32 received_count = 1;
+}
+
+message ChatMessage {
+    string id = 1;
+    string room_id = 2;
+    string user_id = 3;
+    string text = 4;
+    google.protobuf.Timestamp created_at = 5;
+}
+
